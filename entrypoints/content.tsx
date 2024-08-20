@@ -1,7 +1,8 @@
+import 'virtual:uno.css' 
 import "antd/dist/reset.css";
 import { createRoot } from "react-dom/client";
 import ElementHighlighter from "./components/spotlight/spotlight";
-import ElementInfo from "./components/element_info/element_info";
+import ElementInfo, { ElementInfoId } from "./components/element_info/element_info";
 import { useMouseStore } from './store/global';
 
 export default defineContentScript({
@@ -39,9 +40,12 @@ const useMouseListener = () => {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       e.preventDefault();
-      setLastEvent(e);
-      setPosition(e.clientX, e.clientY);
-      setIsListeningMouse(!isListeningMouse); // 切换监听状态
+      // 未点击卡片内重新进入审查状态
+      if (!document.getElementById(ElementInfoId)?.contains(e.target as Node)) {
+        setLastEvent(e);
+        setPosition(e.clientX, e.clientY);
+        setIsListeningMouse(!isListeningMouse);
+      }
     };
     window.addEventListener('click', handleClick);
     return () => {

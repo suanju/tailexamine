@@ -1,7 +1,22 @@
 import { useMouseStore } from "@/entrypoints/store/global";
 import React, { useEffect, useState } from "react";
 
+
+
 export default () => {
+  const lineBaseStyle = "fixed z-[9997] border-2 border-dashed border-[#5766E3]";
+  const infoBoxBaseStyle = "fixed z-[9999] bg-[rgba(0,0,0,0.7)] text-white p-1 rounded text-xs";
+  const highlightBaseStyle = "fixed z-[9998] border-2 border-dashed border-[#5766E3]";
+  const lineStyle = {
+    border: "2px dashed #5766E3",
+    background: "repeating-linear-gradient(90deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
+  };
+  const verticalLineStyle = {
+    ...lineStyle,
+    background: "repeating-linear-gradient(180deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
+  };
+
+
   const [highlightStyle, setHighlightStyle] = useState<React.CSSProperties>({});
   const [infoBoxStyle, setInfoBoxStyle] = useState<React.CSSProperties>({});
   const [infoText, setInfoText] = useState<string>("");
@@ -16,20 +31,11 @@ export default () => {
     rightBottom: {} as React.CSSProperties,
   });
 
-  
+
   const { lastEvent } = useMouseStore();
 
   useEffect(() => {
-    const lineStyle = {
-      border: "2px dashed #5766E3",
-      background: "repeating-linear-gradient(90deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
-    };
-  
-    const verticalLineStyle = {
-      ...lineStyle,
-      background: "repeating-linear-gradient(180deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
-    };
-  
+
     const updateHighlight = (element: HTMLElement) => {
       const rect = element.getBoundingClientRect();
 
@@ -41,7 +47,6 @@ export default () => {
         height: `${rect.height}px`,
         position: "fixed",
         zIndex: 9998,
-        border: "2px dashed #5766E3", // 如果需要，保留高亮框的虚线样式
         pointerEvents: "none",
       });
 
@@ -58,11 +63,6 @@ export default () => {
         top: `${rect.top - 30}px`,
         position: "fixed",
         zIndex: 9999,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        color: "white",
-        padding: "5px",
-        borderRadius: "5px",
-        fontSize: "12px",
         pointerEvents: "none",
         display: "block",
       });
@@ -80,8 +80,6 @@ export default () => {
           top: `${rect.top}px`,
           width: `${rect.left}px`,
           height: "2px",
-          position: "fixed",
-          zIndex: 9997,
           ...lineStyle,
         },
         topRight: {
@@ -89,8 +87,6 @@ export default () => {
           top: `${rect.top}px`,
           width: `${pageWidth - rect.right}px`,
           height: "2px",
-          position: "fixed",
-          zIndex: 9997,
           ...lineStyle,
         },
         bottomLeft: {
@@ -98,8 +94,6 @@ export default () => {
           top: `${rect.bottom}px`,
           width: `${rect.left}px`,
           height: "2px",
-          position: "fixed",
-          zIndex: 9997,
           ...lineStyle,
         },
         bottomRight: {
@@ -107,8 +101,6 @@ export default () => {
           top: `${rect.bottom}px`,
           width: `${pageWidth - rect.right}px`,
           height: "2px",
-          position: "fixed",
-          zIndex: 9997,
           ...lineStyle,
         },
         leftTop: {
@@ -116,8 +108,6 @@ export default () => {
           top: "0px",
           width: "2px",
           height: `${rect.top}px`,
-          position: "fixed",
-          zIndex: 9997,
           ...verticalLineStyle,
         },
         leftBottom: {
@@ -125,8 +115,6 @@ export default () => {
           top: `${rect.bottom}px`,
           width: "2px",
           height: `${pageHeight - rect.bottom}px`,
-          position: "fixed",
-          zIndex: 9997,
           ...verticalLineStyle,
         },
         rightTop: {
@@ -134,8 +122,6 @@ export default () => {
           top: "0px",
           width: "2px",
           height: `${rect.top}px`,
-          position: "fixed",
-          zIndex: 9997,
           ...verticalLineStyle,
         },
         rightBottom: {
@@ -143,8 +129,6 @@ export default () => {
           top: `${rect.bottom}px`,
           width: "2px",
           height: `${pageHeight - rect.bottom}px`,
-          position: "fixed",
-          zIndex: 9997,
           ...verticalLineStyle,
         },
       });
@@ -165,12 +149,9 @@ export default () => {
       });
     };
 
-
     const target = lastEvent.target as HTMLElement;
     if (target && target !== document.body && target !== document.documentElement) {
-      const rect = target.getBoundingClientRect();
       updateHighlight(target);
-      updateLines(rect);
     } else {
       removeHighlight();
     }
@@ -180,16 +161,18 @@ export default () => {
   return (
     <>
       <div id="spotlight">
-        <div style={highlightStyle}></div>
-        <div style={infoBoxStyle}>{infoText}</div>
-        <div style={lineStyles.topLeft}></div>
-        <div style={lineStyles.topRight}></div>
-        <div style={lineStyles.bottomLeft}></div>
-        <div style={lineStyles.bottomRight}></div>
-        <div style={lineStyles.leftTop}></div>
-        <div style={lineStyles.leftBottom}></div>
-        <div style={lineStyles.rightTop}></div>
-        <div style={lineStyles.rightBottom}></div>
+        <div className={highlightBaseStyle} style={highlightStyle}></div>
+        <div className={infoBoxBaseStyle} style={infoBoxStyle}>
+          {infoText}
+        </div>
+        <div className={lineBaseStyle} style={lineStyles.topLeft}></div>
+        <div className={lineBaseStyle} style={lineStyles.topRight}></div>
+        <div className={lineBaseStyle} style={lineStyles.bottomLeft}></div>
+        <div className={lineBaseStyle} style={lineStyles.bottomRight}></div>
+        <div className={lineBaseStyle} style={lineStyles.leftTop}></div>
+        <div className={lineBaseStyle} style={lineStyles.leftBottom}></div>
+        <div className={lineBaseStyle} style={lineStyles.rightTop}></div>
+        <div className={lineBaseStyle} style={lineStyles.rightBottom}></div>
       </div>
     </>
   );

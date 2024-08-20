@@ -2,3 +2,11 @@
   background-color: #1f2937;
   border-bottom: 0px !important;
 }
+
+#element-info > .ant-card .ant-card-body {
+  padding: 0px !important;
+}
+
+#element-info .ant-checkbox-wrapper {
+  color: #fff !important;
+}
