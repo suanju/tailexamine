@@ -10,3 +10,7 @@
 #element-info .ant-checkbox-wrapper {
   color: #fff !important;
 }
+
+#element-info .ant-tag {
+  margin-bottom: 6px !important;
+}

@@ -4,7 +4,7 @@ import UnoCSS from 'unocss/vite'
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   runner: {
-    startUrls: ["https://baidu.com/"],
+    startUrls: ["https://www.tailwindcss.cn/"],
   },
   vite: () => {
     return {

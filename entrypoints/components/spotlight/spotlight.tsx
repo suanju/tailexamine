@@ -16,7 +16,6 @@ export default () => {
     background: "repeating-linear-gradient(180deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
   };
 
-
   const [highlightStyle, setHighlightStyle] = useState<React.CSSProperties>({});
   const [infoBoxStyle, setInfoBoxStyle] = useState<React.CSSProperties>({});
   const [infoText, setInfoText] = useState<string>("");
