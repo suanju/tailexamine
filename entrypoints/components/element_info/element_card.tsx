@@ -1,64 +1,12 @@
 import "./css/index.css"
-import { Button, Card, Checkbox, CheckboxOptionType, ConfigProvider, GetProp, Input, Tag } from 'antd';
+import CardHead from "./card_head";
+import CardInput from "./card_input";
+import { Card, Checkbox, CheckboxOptionType, GetProp, Tag } from 'antd';
 import { getElementStructure } from "@/utlis/dom";
-import { CheckOutlined } from '@ant-design/icons';
+
 import { useMouseStore } from "@/entrypoints/store/global";
-import { ChangeEvent } from "react";
 
 
-const CustomTitle = () => {
-    return (
-        <div className="h-10 flex items-center">
-        </div>
-    );
-};
-
-const CustomInput: React.FC = () => {
-    const { element } = useMouseStore();
-    const [inputValue, setInputValue] = useState<string>("");
-
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleButtonClick = () => {
-        if (element) {
-            if (!inputValue) return false;
-            element?.classList.add(inputValue);
-            setInputValue("");
-        }
-    };
-
-    return (
-        <div className="h-10 px-2  w-full flex items-center justify-center">
-            <ConfigProvider
-                theme={{
-                    components: {
-                        Input: {
-                            colorBgContainer: '#334155',
-                            colorBorder: '#334155',
-                            activeBg: '#334155',
-                            activeBorderColor: "#334155"
-                        },
-                    },
-                }}
-            >
-                <div className="w-full flex items-center justify-center">
-                    <Input
-                        className="h-6 flex-1 text-white"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                    />
-                    {inputValue ?
-                        <Button className="ml-2 w-4" size="small" type="primary" icon={<CheckOutlined />} shape="round" onClick={handleButtonClick} />
-                        : null}
-                </div>
-
-            </ConfigProvider>
-
-        </div>
-    );
-};
 
 export default () => {
     const { element, setElement } = useMouseStore();
@@ -150,13 +98,14 @@ export default () => {
             list.forEach(className => {
                 element.classList.add(className as string);
             });
+            //重新计算高亮位置
             setElement(element)
         }
         setCheckedList(list);
     };
 
     const handleTagClose = (removedOption: string) => {
-        console.log("close",removedOption)
+        console.log("close", removedOption)
         //删除实体element的 class toggleOffClass
         if (element) {
             element.classList.remove(removedOption);
@@ -178,7 +127,7 @@ export default () => {
             bordered={false}
             className="w-75 h-92 rounded-md overflow-hidden bg-slate-900 text-white"
         >
-            <CustomTitle />
+            <CardHead />
             <div className="flex h-72 flex-col overflow-hidden items-start text-white bg-slate-900">
                 <div className="mx-2">
                     {getElementStructure(element)}
@@ -211,7 +160,7 @@ export default () => {
                     ) : 'No element selected'}
                 </div>
             </div>
-            <CustomInput />
+            <CardInput />
         </Card>
     );
 };

@@ -11,6 +11,10 @@
   color: #fff !important;
 }
 
+#element-info .ant-checkbox-group {
+  margin-bottom: 20px;
+}
+
 #element-info .ant-tag {
   margin-bottom: 6px !important;
 }
