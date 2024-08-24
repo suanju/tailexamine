@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import ElementHighlighter from "./components/spotlight/spotlight";
 import ElementInfo, { ElementInfoId } from "./components/element_info/element_info";
 import { useMouseStore } from './store/global';
+import { ConfigProvider } from 'antd';
 
 export default defineContentScript({
   matches: ['*://*/*'],
@@ -62,10 +63,27 @@ const App = () => {
   return (
     <>
       {element ? (
-        <div>
-          <ElementHighlighter />
-          <ElementInfo />
-        </div>
+        <ConfigProvider
+          theme={{
+            components: {
+              Input: {
+                colorBgContainer: '#334155',
+                colorBorder: '#334155',
+                activeBg: '#334155',
+                activeBorderColor: "#334155"
+              },
+              Breadcrumb: {
+                colorText: '#fff',
+                separatorColor: "#fff"
+              },
+            },
+          }}
+        >
+          <div>
+            <ElementHighlighter />
+            <ElementInfo />
+          </div>
+        </ConfigProvider>
       ) : null}
     </>
   );

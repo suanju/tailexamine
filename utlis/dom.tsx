@@ -1,3 +1,5 @@
+import { Breadcrumb } from "antd";
+
 export const getElementStructure = (element: HTMLElement | null) => {
     if (!element || !(element instanceof HTMLElement)) {
         return 'Invalid element';
@@ -7,7 +9,20 @@ export const getElementStructure = (element: HTMLElement | null) => {
     const parentTag = parentElement ? parentElement.tagName.toLowerCase() : '';
 
     if (parentTag) {
-        return `${parentTag} > ${currentTag}`;
+        return (
+            <Breadcrumb
+                className="text-white"
+                separator=">"
+                items={[
+                    {
+                        title: parentTag,
+                    },
+                    {
+                        title: currentTag,
+                    },
+                ]}
+            />
+        )
     } else {
         return currentTag;
     }

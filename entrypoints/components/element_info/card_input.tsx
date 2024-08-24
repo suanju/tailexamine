@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMouseStore } from "@/entrypoints/store/global";
 import { CheckOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Input } from "antd";
+import { Button, Input } from "antd";
 import { ChangeEvent, KeyboardEvent } from "react";
 
 export default () => {
@@ -32,30 +32,17 @@ export default () => {
 
     return (
         <div className="h-10 px-2  w-full flex items-center justify-center">
-            <ConfigProvider
-                theme={{
-                    components: {
-                        Input: {
-                            colorBgContainer: '#334155',
-                            colorBorder: '#334155',
-                            activeBg: '#334155',
-                            activeBorderColor: "#334155"
-                        },
-                    },
-                }}
-            >
-                <div className="w-full flex items-center justify-center">
-                    <Input
-                        className="h-6 flex-1 text-white"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        onKeyDown={handleKeyDown}
-                    />
-                    {inputValue ?
-                        <Button className="ml-2 w-4" size="small" type="primary" icon={<CheckOutlined />} shape="round" onClick={handleButtonClick} />
-                        : null}
-                </div>
-            </ConfigProvider>
+            <div className="w-full flex items-center justify-center">
+                <Input
+                    className="h-6 flex-1 text-white"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                />
+                {inputValue ?
+                    <Button className="ml-2 w-4" size="small" type="primary" icon={<CheckOutlined />} shape="round" onClick={handleButtonClick} />
+                    : null}
+            </div>
         </div>
     );
 };
