@@ -1,4 +1,4 @@
-import 'virtual:uno.css' 
+import 'virtual:uno.css'
 import "antd/dist/reset.css";
 import { createRoot } from "react-dom/client";
 import ElementHighlighter from "./components/spotlight/spotlight";
@@ -39,17 +39,19 @@ const useMouseListener = () => {
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      e.preventDefault();
       // 未点击卡片内重新进入审查状态
       if (!document.getElementById(ElementInfoId)?.contains(e.target as Node)) {
+        e.stopPropagation(); //冒泡
+        e.stopImmediatePropagation(); //其他监听器
+        e.preventDefault(); //默认行为
         setLastEvent(e);
         setPosition(e.clientX, e.clientY);
         setIsListeningMouse(!isListeningMouse);
       }
     };
-    window.addEventListener('click', handleClick);
+    window.addEventListener('click', handleClick, true);
     return () => {
-      window.removeEventListener('click', handleClick);
+      window.removeEventListener('click', handleClick, true);
     };
   }, [isListeningMouse, setIsListeningMouse]);
 };

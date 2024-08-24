@@ -1,5 +1,5 @@
-export const getElementStructure = (element: Element | null) => {
-    if (!element || !(element instanceof Element)) {
+export const getElementStructure = (element: HTMLElement | null) => {
+    if (!element || !(element instanceof HTMLElement)) {
         return 'Invalid element';
     }
     const currentTag = element.tagName.toLowerCase();

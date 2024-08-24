@@ -1,178 +1,90 @@
 import { useMouseStore } from "@/entrypoints/store/global";
-import React, { useEffect, useState } from "react";
-
-
+import { useEffect, useState } from "react";
 
 export default () => {
-  const lineBaseStyle = "fixed z-[9997] border-2 border-dashed border-[#5766E3]";
-  const infoBoxBaseStyle = "fixed z-[9999] bg-[rgba(0,0,0,0.7)] text-white p-1 rounded text-xs";
-  const highlightBaseStyle = "fixed z-[9998] border-2 border-dashed border-[#5766E3]";
-  const lineStyle = {
-    border: "2px dashed #5766E3",
-    background: "repeating-linear-gradient(90deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
-  };
-  const verticalLineStyle = {
-    ...lineStyle,
-    background: "repeating-linear-gradient(180deg, #5766E3, #5766E3 4px, transparent 4px, transparent 8px)",
-  };
-
-  const [highlightStyle, setHighlightStyle] = useState<React.CSSProperties>({});
-  const [infoBoxStyle, setInfoBoxStyle] = useState<React.CSSProperties>({});
+  const [scrollTop, setScrollTop] = useState(window.scrollY);
+  const [_, setHighlightRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [infoText, setInfoText] = useState<string>("");
-  const [lineStyles, setLineStyles] = useState({
-    topLeft: {} as React.CSSProperties,
-    topRight: {} as React.CSSProperties,
-    bottomLeft: {} as React.CSSProperties,
-    bottomRight: {} as React.CSSProperties,
-    leftTop: {} as React.CSSProperties,
-    leftBottom: {} as React.CSSProperties,
-    rightTop: {} as React.CSSProperties,
-    rightBottom: {} as React.CSSProperties,
-  });
+  const [infoTextPosition, setInfoTextPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [lines, setLines] = useState<{
+    x1: number; y1: number; x2: number; y2: number;
+  }[]>([]);
 
-
-  const { lastEvent } = useMouseStore();
+  const { element, lastEvent } = useMouseStore();
 
   useEffect(() => {
-
-    const updateHighlight = (element: HTMLElement) => {
-      const rect = element.getBoundingClientRect();
-
-      // 设置高亮框样式
-      setHighlightStyle({
-        left: `${rect.left + 2}px`,
-        top: `${rect.top + 2}px`,
-        width: `${rect.width}px`,
-        height: `${rect.height}px`,
-        position: "fixed",
-        zIndex: 9998,
-        pointerEvents: "none",
-      });
-
-      // 更新信息框内容
-      const tag = element.tagName.toLowerCase();
-      const classList = element.classList.length > 0 ? `.${[...element.classList].join(".")}` : "";
-      const id = element.id ? `#${element.id}` : "";
-      const dimensions = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
-      setInfoText(`${tag}${id}${classList} - ${dimensions}`);
-
-      // 设置信息框样式
-      setInfoBoxStyle({
-        left: `${rect.left}px`,
-        top: `${rect.top - 30}px`,
-        position: "fixed",
-        zIndex: 9999,
-        pointerEvents: "none",
-        display: "block",
-      });
-
-      updateLines(rect);
-    };
-
-    const updateLines = (rect: DOMRect) => {
-      const pageWidth = window.innerWidth;
-      const pageHeight = window.innerHeight;
-
-      setLineStyles({
-        topLeft: {
-          left: "0px",
-          top: `${rect.top}px`,
-          width: `${rect.left}px`,
-          height: "2px",
-          ...lineStyle,
-        },
-        topRight: {
-          left: `${rect.right}px`,
-          top: `${rect.top}px`,
-          width: `${pageWidth - rect.right}px`,
-          height: "2px",
-          ...lineStyle,
-        },
-        bottomLeft: {
-          left: "0px",
-          top: `${rect.bottom}px`,
-          width: `${rect.left}px`,
-          height: "2px",
-          ...lineStyle,
-        },
-        bottomRight: {
-          left: `${rect.right}px`,
-          top: `${rect.bottom}px`,
-          width: `${pageWidth - rect.right}px`,
-          height: "2px",
-          ...lineStyle,
-        },
-        leftTop: {
-          left: `${rect.left}px`,
-          top: "0px",
-          width: "2px",
-          height: `${rect.top}px`,
-          ...verticalLineStyle,
-        },
-        leftBottom: {
-          left: `${rect.left}px`,
-          top: `${rect.bottom}px`,
-          width: "2px",
-          height: `${pageHeight - rect.bottom}px`,
-          ...verticalLineStyle,
-        },
-        rightTop: {
-          left: `${rect.right}px`,
-          top: "0px",
-          width: "2px",
-          height: `${rect.top}px`,
-          ...verticalLineStyle,
-        },
-        rightBottom: {
-          left: `${rect.right}px`,
-          top: `${rect.bottom}px`,
-          width: "2px",
-          height: `${pageHeight - rect.bottom}px`,
-          ...verticalLineStyle,
-        },
-      });
-    };
-
-    const removeHighlight = () => {
-      setHighlightStyle({ display: "none" });
-      setInfoBoxStyle({ display: "none" });
-      setLineStyles({
-        topLeft: { display: "none" },
-        topRight: { display: "none" },
-        bottomLeft: { display: "none" },
-        bottomRight: { display: "none" },
-        leftTop: { display: "none" },
-        leftBottom: { display: "none" },
-        rightTop: { display: "none" },
-        rightBottom: { display: "none" },
-      });
-    };
-
+    // console.log("进行重新计算 高亮线位置");
     const target = lastEvent.target as HTMLElement;
     if (target && target !== document.body && target !== document.documentElement) {
-      updateHighlight(target);
-    } else {
-      removeHighlight();
-    }
+      const rect = target.getBoundingClientRect();
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+      const dimensions = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
 
-  }, [lastEvent]);
+      setScrollTop(window.scrollY);
+
+      setHighlightRect({
+        x: rect.left + scrollX,
+        y: rect.top + scrollY,
+        width: rect.width,
+        height: rect.height,
+      });
+
+      // 更新 infoTextPosition，文本在目标元素右上角
+      setInfoText(`${dimensions}`);
+      setInfoTextPosition({
+        x: rect.right + scrollX - 4,
+        y: rect.top + scrollY - 10,
+      });
+
+      setLines([
+        { x1: rect.left + scrollX + 7, y1: 0, x2: rect.left + scrollX + 7, y2: window.innerHeight + scrollY },
+        { x1: rect.right + scrollX + 7, y1: 0, x2: rect.right + scrollX + 7, y2: window.innerHeight + scrollY },
+        { x1: 0, y1: rect.top - 5, x2: window.innerWidth + scrollX, y2: rect.top - 5 },
+        { x1: 0, y1: rect.bottom + 5, x2: window.innerWidth + scrollX, y2: rect.bottom + 5 },
+      ]);
+    } else {
+      setHighlightRect(null);
+      setInfoText("");
+      setLines([]);
+    }
+  }, [lastEvent, element?.className]);
 
   return (
-    <>
-      <div id="spotlight">
-        <div className={highlightBaseStyle} style={highlightStyle}></div>
-        <div className={infoBoxBaseStyle} style={infoBoxStyle}>
-          {infoText}
-        </div>
-        <div className={lineBaseStyle} style={lineStyles.topLeft}></div>
-        <div className={lineBaseStyle} style={lineStyles.topRight}></div>
-        <div className={lineBaseStyle} style={lineStyles.bottomLeft}></div>
-        <div className={lineBaseStyle} style={lineStyles.bottomRight}></div>
-        <div className={lineBaseStyle} style={lineStyles.leftTop}></div>
-        <div className={lineBaseStyle} style={lineStyles.leftBottom}></div>
-        <div className={lineBaseStyle} style={lineStyles.rightTop}></div>
-        <div className={lineBaseStyle} style={lineStyles.rightBottom}></div>
-      </div>
-    </>
+    <div id="spotlight">
+      <svg
+        className="absolute z-[9999]"
+        style={{ width: "100%", height: "100%", top: `${scrollTop}px`, left: 0, pointerEvents: "none" }}
+        viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
+      >
+        {/* 信息文本 */}
+        {infoText && (
+          <text
+            className="text-xs bg-slate-800"
+            x={infoTextPosition.x}
+            y={infoTextPosition.y}
+            fill="#fff"
+            fontFamily="Arial, sans-serif"
+            textAnchor="end"
+          >
+            {infoText}
+          </text>
+        )}
+
+        {/* 线条 */}
+        {lines.map((line, index) => (
+          <line
+            key={index}
+            stroke="#6171fe"
+            strokeWidth="2"
+            strokeDasharray="10,10"
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
+          />
+        ))}
+      </svg>
+    </div>
   );
 };
