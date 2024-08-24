@@ -110,12 +110,14 @@ export default () => {
         checkedRef.current = checkedList;
         const toggleOffClass = element?.dataset.toggleOffClass
         const opList = optionsRef.current.map(op => op.value);
+        //获取新增的class
         const addChecked = opList.filter(item => {
             return !checkedRef.current.includes(item)
         });
         setCheckedList(prevChecked => {
             console.log("checkedList", prevChecked, addChecked)
             return [...prevChecked, ...addChecked.filter(item => {
+                //排除取消勾选class
                 return !toggleOffClass?.split(' ').includes(item)
             })]
         });
@@ -154,6 +156,17 @@ export default () => {
     };
 
     const handleTagClose = (removedOption: string) => {
+        console.log("close",removedOption)
+        //删除实体element的 class toggleOffClass
+        if (element) {
+            element.classList.remove(removedOption);
+            const toggleOffClass = element.dataset.toggleOffClass
+            const toggleOffClassArr = toggleOffClass?.split(' ')
+            if (toggleOffClassArr?.includes(removedOption)) {
+                element.dataset.toggleOffClass = toggleOffClassArr.filter(item => item !== removedOption).join(" ")
+            }
+        }
+        //修改选项列表和已选中列表
         setPlainOptions(plainOptions.filter(option => option.value !== removedOption));
         setCheckedList(prev => prev.filter(option => option !== removedOption));
     };
