@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMouseStore } from "@/entrypoints/store/global";
+import { useMouseStore } from "@/entrypoints/store/mouse";
 import { CheckOutlined } from "@ant-design/icons";
 import { Button, Input } from "antd";
 import { ChangeEvent, KeyboardEvent } from "react";

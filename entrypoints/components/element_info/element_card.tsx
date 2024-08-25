@@ -4,7 +4,7 @@ import CardInput from "./card_input";
 import { Card, Checkbox, CheckboxOptionType, GetProp, Tag } from 'antd';
 import { getElementStructure } from "@/utlis/dom";
 
-import { useMouseStore } from "@/entrypoints/store/global";
+import { useMouseStore } from "@/entrypoints/store/mouse";
 
 
 

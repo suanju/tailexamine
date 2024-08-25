@@ -1,4 +1,4 @@
-import { useMouseStore } from "@/entrypoints/store/global";
+import { useMouseStore } from "@/entrypoints/store/mouse";
 import { useEffect, useState } from "react";
 
 export default () => {
