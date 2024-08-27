@@ -9,28 +9,37 @@ export default () => {
     const { elementCardPosition, setElementCardPosition, isMove, setIsMove } = useElementCardStore();
     const dragStartRef = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
+    const [isTipsOpen, setIsTipsOpen] = useState(false);
 
     const updatePosition = useCallback((e: MouseEvent) => {
         if (isMove) {
             const { clientX, clientY } = e;
+            //减少重绘次数
             requestAnimationFrame(() => {
                 setElementCardPosition(clientY - dragStartRef.current.y, clientX - dragStartRef.current.x);
             });
         }
     }, [isMove, setElementCardPosition]);
 
+    //开始拖拽
     const cleanupListeners = useCallback(() => {
+        setIsTipsOpen(false)
+        document.body.style.userSelect = '';
         document.removeEventListener('mousemove', updatePosition);
         document.removeEventListener('mouseup', handleMouseUp);
-        document.body.style.userSelect = '';
-    }, [updatePosition]);
 
+    }, [updatePosition]);
+    
+    //结束拖拽
     const addListeners = useCallback(() => {
+        setIsTipsOpen(true)
+        document.body.style.userSelect = 'none';
         document.addEventListener('mousemove', updatePosition);
         document.addEventListener('mouseup', handleMouseUp);
     }, [updatePosition]);
 
     const handleMouseUp = useCallback(() => {
+
         setIsMove(false);
         cleanupListeners();
     }, [cleanupListeners, setIsMove]);
@@ -38,7 +47,6 @@ export default () => {
     const toggleDragMode = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
         if (!isDragging) {
-            document.body.style.userSelect = 'none';
             dragStartRef.current = {
                 x: e.clientX - elementCardPosition.left,
                 y: e.clientY - elementCardPosition.top,
@@ -56,6 +64,7 @@ export default () => {
         if (isDragging) {
             addListeners();
         } else {
+            setIsTipsOpen(true)
             cleanupListeners();
         }
         return cleanupListeners;
@@ -75,19 +84,19 @@ export default () => {
                 </div>
             </div>
             <div className="flex">
-                <Tooltip placement="top" title="Copy classes" arrow={true}>
+                <Tooltip placement="top" title={isTipsOpen ? '' : 'Copy classes'} arrow={true}>
                     <CopyOutlined className="mr-.4 size-6" />
                 </Tooltip>
-                <Tooltip placement="top" title="Copy element" arrow={true}>
+                <Tooltip placement="top" title={isTipsOpen ? '' : 'Copy element'} arrow={true}>
                     <SnippetsOutlined className="mr-.4 size-6" />
                 </Tooltip>
-                <Tooltip placement="top" title="Move window" arrow={true}>
+                <Tooltip placement="top" title={isTipsOpen ? '' : 'Move window'} arrow={true}>
                     <FullscreenOutlined
                         className="mr-.4 size-6"
                         onClick={toggleDragMode}
                     />
                 </Tooltip>
-                <Tooltip placement="topRight" title="Close window" arrow={true}>
+                <Tooltip placement="topRight" title={isTipsOpen ? '' : 'Close window'} arrow={true}>
                     <CloseOutlined onClick={close} className="size-6" />
                 </Tooltip>
             </div>
