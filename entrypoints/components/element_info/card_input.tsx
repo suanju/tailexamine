@@ -1,47 +1,57 @@
 import { useState } from "react";
 import { useMouseStore } from "@/entrypoints/store/mouse";
-import { CheckOutlined } from "@ant-design/icons";
-import { Button, Input } from "antd";
-import { ChangeEvent, KeyboardEvent } from "react";
+import { ElementInfoId } from "./element_info";
+import { Select, Space } from "antd";
+import { options } from "./rule";
+import { KeyboardEvent } from "react";
 
 export default () => {
     const { element, setElement } = useMouseStore();
-    const [inputValue, setInputValue] = useState<string>("");
+    const [searchValue, setSearchValue] = useState<string>("");
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // 移除空格
-        const value = e.target.value.replace(/\s+/g, '');
-        setInputValue(value);
-    };
-
-    const handleButtonClick = () => {
-        if (element) {
-            if (!inputValue) return false;
-            element?.classList.add(inputValue);
-            setInputValue("");
-            //重新计算高亮位置
-            setElement(element);
-        }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && inputValue) {
+    const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+        console.log("keydown", e.key, searchValue);
+        if (e.key === 'Enter' && searchValue) {
             handleButtonClick();
         }
     };
 
+    const handleSelect = (value: string) => {
+        console.log("-----", value);
+        setSearchValue(value);
+        handleButtonClick();
+    };
+
+    const handleButtonClick = () => {
+        if (element && searchValue) {
+            element.classList.add(searchValue);
+            setSearchValue(""); // 清空搜索框
+            setElement(element);
+        }
+    };
+
     return (
-        <div className="h-10 px-2  w-full flex items-center justify-center">
-            <div className="w-full flex items-center justify-center">
-                <Input
-                    className="h-6 flex-1 text-white"
-                    value={inputValue}
-                    onChange={handleInputChange}
+        <div className="h-10 px-2 w-full flex items-center justify-center">
+            <div className="mx-.4 w-full h-6 flex items-center justify-center">
+                <Select
+                    showSearch
+                    className="flex-1"
+                    placement="topLeft"
+                    getPopupContainer={() => document.getElementById(ElementInfoId) as HTMLElement}
+                    options={options}
+                    optionRender={(option) => (
+                        <Space>
+                            <span role="img" aria-label={option.data.label}>
+                                {option.data.label}
+                            </span>
+                            {option.data.descr}
+                        </Space>
+                    )}
+                    value={searchValue}
                     onKeyDown={handleKeyDown}
+                    onSelect={handleSelect}
+                    onSearch={setSearchValue}
                 />
-                {inputValue ?
-                    <Button className="ml-2 w-4" size="small" type="primary" icon={<CheckOutlined />} shape="round" onClick={handleButtonClick} />
-                    : null}
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import "./css/index.css"
+import "@/public/css/element_info/index.css"
 import CardHead from "./card_head";
 import CardInput from "./card_input";
 import { Card, Checkbox, CheckboxOptionType, GetProp, Tag } from 'antd';
