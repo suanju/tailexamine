@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^5.4.0",
+    "@iconify-json/system-uicons": "^1.1.13",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@wxt-dev/module-react": "^1.1.0",

@@ -2,7 +2,7 @@ import "@/public/css/element_info/index.css"
 import CardHead from "./card_head";
 import CardInput from "./card_input";
 import { Card, Checkbox, CheckboxOptionType, GetProp, Tag } from 'antd';
-import { getElementStructure } from "@/utlis/dom";
+import { getElementStructure } from "@/utlis/tools";
 
 import { useMouseStore } from "@/entrypoints/store/mouse";
 
@@ -125,7 +125,7 @@ export default () => {
     return (
         <Card
             bordered={false}
-            className="w-75 h-92 rounded-md overflow-hidden bg-slate-900 text-white"
+            className="w-84 h-92 rounded-md overflow-hidden bg-slate-900 text-white"
         >
             <CardHead />
             <div className="flex h-72 flex-col overflow-hidden items-start text-white bg-slate-900">
@@ -137,7 +137,7 @@ export default () => {
                         className=""
                     />
                     {element ? (
-                        <div className="mt-2 mx-2 flex flex-wrap items-start h-70 overflow-y-auto"
+                        <div className="mt-2 mx-2 flex flex-wrap items-baseline h-70 overflow-y-auto"
                             un-scrollbar="~ track-color-gray-800 thumb-color-[#374151] w-4px rounded radius-10px">
                             <Checkbox.Group
                                 value={checkedList}

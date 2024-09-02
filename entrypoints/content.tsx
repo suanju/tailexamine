@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client";
 import ElementHighlighter from "./components/spotlight/spotlight";
 import ElementInfo, { ElementInfoId } from "./components/element_info/element_info";
 import { useMouseStore } from '@/entrypoints/store/mouse';
-import { useElementCardStore } from '@/entrypoints/store/element_card';
 import { ConfigProvider } from 'antd';
 import { useEffect, useCallback } from 'react';
 

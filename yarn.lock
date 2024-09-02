@@ -651,7 +651,14 @@
   resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.23.1.tgz#81fd50d11e2c32b2d6241470e3185b70c7b30699"
   integrity sha512-BHpFFeslkWrXWyUPnbKm+xYYVYruCinGcftSBaa8zoF9hZO4BcSCFUvHVTtzpIY6YzUnYtuEhZ+C9iEXjxnasg==
 
-"@iconify/types@^2.0.0":
+"@iconify-json/system-uicons@^1.1.13":
+  version "1.1.13"
+  resolved "https://registry.npmmirror.com/@iconify-json/system-uicons/-/system-uicons-1.1.13.tgz#0e216b728b965aa06223f55807b3fc2be60772ed"
+  integrity sha512-CufoMT3vWS7wTB6gWWi+uIGCH3Hodl6cdcJyEcAKTjAEkZf/tr16uOnrngcPmKl7Hq4GrvFXyLmbYfuANdh0Kg==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
   integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
