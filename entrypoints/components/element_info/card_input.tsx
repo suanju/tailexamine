@@ -12,12 +12,11 @@ const optionRender = (option: any) => {
     return (
         <Space>
             <span role="img" aria-label={option.data.label} className="flex items-center">
-                {isColor ? <div className="size-4 rounded-md" style={{backgroundColor: color as string}}>
+                {isColor ? <div className="size-4 rounded-.8 border-2 border-white" style={{backgroundColor: color as string}}>
                 </div> : <i className="i-system-uicons-code mr-.4 size-4 c-slate"></i>}
                 <span className="ml-1.2 hover:text-blue-500">{option.data.label}</span>
             </span>
-            <span className="ml-2 text-sm text-neutral overflow-hidden whitespace-nowrap hover:overflow-auto ">
-                {isColor}{color}
+            <span className="ml-2 text-xs text-neutral overflow-hidden whitespace-nowrap hover:overflow-auto ">
                 {option.data.descr}
             </span>
         </Space>

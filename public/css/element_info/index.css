@@ -15,8 +15,16 @@
   margin-bottom: 20px;
 }
 
+#element-info .ant-checkbox-group { 
+  margin-right: 6px;
+  margin-left: 6px;
+}
 #element-info .ant-tag {
-  margin-bottom: 6px !important;
+  width: 100%;
+}
+
+#element-info .ant-badge {
+  width: 100%;
 }
 
 .ant-select-dropdown {
