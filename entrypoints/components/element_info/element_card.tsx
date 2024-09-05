@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import "@/public/css/element_info/index.css";
 import CardHead from "./card_head";
 import CardInput from "./card_input";
-import { Badge, Card, Checkbox, CheckboxOptionType, GetProp, Tag } from 'antd';
-import { getElementStructure } from "@/utlis/tools";
+import { Card, Checkbox, CheckboxOptionType, GetProp, Tag } from 'antd';
+import { getElementStructure } from "@/entrypoints/utlis/tools";
 import { useMouseStore } from "@/entrypoints/store/mouse";
 import { CloseCircleOutlined } from "@ant-design/icons";
 
@@ -140,20 +140,22 @@ export default () => {
                                 </div>
                                 {plainOptions.map(option => (
                                     <div
-                                        className='flex flex-grow-1 mb-2'
+                                        className='relative flex flex-grow-1 mb-2'
                                         key={option.value}
                                         onMouseEnter={() => handleMouseEnter(option.value)}
                                         onMouseLeave={handleMouseLeave}
                                     >
-                                        <Badge count={hoveredTag === option.value ? <CloseCircleOutlined className="size-3" onClick={() => handleTagClose(option.value)} /> : null}>
-                                            <Tag
-                                                color="#253044"
-                                            >
-                                                <Checkbox value={option.value}>
-                                                    {option.label}
-                                                </Checkbox>
-                                            </Tag>
-                                        </Badge>
+                                        <Tag color="#253044" className="relative">
+                                            <Checkbox value={option.value}>
+                                                {option.label}
+                                            </Checkbox>
+                                            {hoveredTag === option.value && (
+                                                <CloseCircleOutlined
+                                                    className="absolute top-0 right--.8 transform translate-x-1/2 -translate-y-1/2 size-3 z-9999"
+                                                    onClick={() => handleTagClose(option.value)}
+                                                />
+                                            )}
+                                        </Tag>
                                     </div>
                                 ))}
                             </Checkbox.Group>
