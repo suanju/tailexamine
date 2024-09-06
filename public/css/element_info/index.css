@@ -25,5 +25,7 @@
 }
 
 .ant-select-dropdown {
+  text-align: start !important;
   z-index: 99999 !important;
 }
+

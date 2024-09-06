@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import ElementHighlighter from "./components/spotlight/spotlight";
 import ElementInfo, { ElementInfoId } from "./components/element_info/element_info";
 import { useMouseStore } from '@/entrypoints/store/mouse';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, App } from 'antd';
 import { useEffect, useCallback } from 'react';
 
 export default defineContentScript({
@@ -14,7 +14,7 @@ export default defineContentScript({
     const root = document.createElement("div");
     document.body.appendChild(root);
     createRoot(root).render(
-      <App />
+      <AppRender />
     );
   },
 });
@@ -22,7 +22,7 @@ export default defineContentScript({
 // 监听鼠标的自定义 Hook
 const useMouseListener = () => {
   const { element, setElement, setLastEvent, setPosition, isListeningMouse, setIsListeningMouse } = useMouseStore();
-  
+
   const handleMouseMove = useCallback((event: MouseEvent) => {
     // 更新鼠标信息
     if (element !== event.target) {
@@ -60,11 +60,11 @@ const useMouseListener = () => {
   }, [handleClick]);
 };
 
-const App = () => {
+const AppRender = () => {
   console.log("加载 App");
   const { element } = useMouseStore();
 
-  useMouseListener(); // 在组件内调用自定义 Hook
+  useMouseListener();
 
   return (
     <>
@@ -87,20 +87,24 @@ const App = () => {
               },
               Breadcrumb: {
                 colorText: '#fff',
-                separatorColor: "#fff"
+                separatorColor: "#fff",
+                itemColor: "#fff",
+                linkColor: "#fff",
+                lastItemColor: "#fff",
               },
-              Select:{
+              Select: {
                 optionActiveBg: '#1e293b',
                 optionSelectedBg: '#1e293b',
                 optionSelectedColor: '#fff',
+                multipleItemBorderColor: "1e293b"
               }
             },
           }}
         >
-          <div>
+          <App>
             <ElementHighlighter />
             <ElementInfo />
-          </div>
+          </App>
         </ConfigProvider>
       ) : null}
     </>

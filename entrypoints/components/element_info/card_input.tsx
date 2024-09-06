@@ -4,13 +4,13 @@ import { useMouseStore } from "@/entrypoints/store/mouse";
 import useDynamicStyles from '@/entrypoints/hooks/use_dynamic_styles';
 import { Select, Space } from "antd";
 import { getColorFromRule } from "@/entrypoints/utlis/tools";
-import { options, rules } from "./rule";
+import { options, rules } from "../../rule/rule";
 
 const optionRender = (option: any) => {
     const { isColor, color } = getColorFromRule(option.data.descr);
     return (
         <Space>
-            <span role="img" aria-label={option.data.label} className="flex items-center">
+            <span role="img" aria-label={option.data.label} className="flex justify-center">
                 {isColor ? <div className="size-4 rounded-.8 border-2 border-white" style={{ backgroundColor: color as string }}>
                 </div> : <i className="i-system-uicons-code mr-.4 size-4 c-slate"></i>}
                 <span className="ml-1.2 hover:text-blue-500">{option.data.label}</span>
@@ -43,7 +43,7 @@ export default () => {
     const handleSearch = (value: string) => {
         setSearchValue(value);
     };
-    
+
     // 选中事件
     const handleSelect = (value: string) => {
         if (element) {
@@ -57,8 +57,8 @@ export default () => {
     };
 
     return (
-        <div className="h-10 px-2 w-full flex items-center justify-center">
-            <div className="mx-.4 w-full h-6 flex items-center justify-center">
+        <div className="h-10 px-2 w-full flex items-center justify-center bg-slate-900">
+            <div className="mx-.2 w-full h-6 flex items-center justify-center">
                 <Select
                     showSearch
                     className="flex-1"
