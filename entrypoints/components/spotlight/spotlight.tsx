@@ -1,53 +1,71 @@
 import { useMouseStore } from "@/entrypoints/store/mouse";
 import { useEffect, useState } from "react";
+import { getScrollbarWidth } from "@/entrypoints/utlis/tools";
 
 export default () => {
   const [scrollTop, setScrollTop] = useState(window.scrollY);
-  const [_, setHighlightRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [highlightRect, setHighlightRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
   const [infoText, setInfoText] = useState<string>("");
   const [infoTextPosition, setInfoTextPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [lines, setLines] = useState<{
-    x1: number; y1: number; x2: number; y2: number;
-  }[]>([]);
-
+  const [lines, setLines] = useState<{ x1: number; y1: number; x2: number; y2: number }[]>([]);
   const { element, lastEvent } = useMouseStore();
+  const [viewBox, setViewBox] = useState(`0 0 ${window.innerWidth} ${window.innerHeight}`);
 
-  useEffect(() => {
-    // console.log("进行重新计算 高亮线位置");
-    const target = lastEvent.target as HTMLElement;
+  const updateLines = (rect: DOMRect) => {
+    const right = rect.right;
+    const left = rect.left;
+    const top = rect.top;
+    const bottom = rect.bottom;
+    // 设置辅助线
+    setLines([
+      { x1: left, y1: 0, x2: left, y2: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) },
+      { x1: right, y1: 0, x2: right, y2: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) },
+      { x1: 0, y1: top, x2: Math.max(document.documentElement.clientWidth, document.body.clientWidth), y2: top },
+      { x1: 0, y1: bottom, x2: Math.max(document.documentElement.clientWidth, document.body.clientWidth), y2: bottom },
+    ]);
+  };
+
+  const updateHighlightAndLines = () => {
+    const target = lastEvent?.target as HTMLElement;
     if (target && target !== document.body && target !== document.documentElement) {
       const rect = target.getBoundingClientRect();
-      const scrollX = window.scrollX;
-      const scrollY = window.scrollY;
-      const dimensions = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
-
       setScrollTop(window.scrollY);
 
       setHighlightRect({
-        x: rect.left + scrollX,
-        y: rect.top + scrollY,
+        x: rect.left,
+        y: rect.top,
         width: rect.width,
         height: rect.height,
       });
 
-      // 更新 infoTextPosition，文本在目标元素右上角
-      setInfoText(`${dimensions}`);
+      setInfoText(`${Math.round(rect.width)} x ${Math.round(rect.height)}`);
       setInfoTextPosition({
-        x: rect.right + scrollX - 4,
-        y: rect.top + scrollY - 10,
+        x: rect.right - 4,
+        y: rect.top - 10,
       });
 
-      setLines([
-        { x1: rect.left + scrollX + 7, y1: 0, x2: rect.left + scrollX + 7, y2: window.innerHeight + scrollY },
-        { x1: rect.right + scrollX + 7, y1: 0, x2: rect.right + scrollX + 7, y2: window.innerHeight + scrollY },
-        { x1: 0, y1: rect.top - 5, x2: window.innerWidth + scrollX, y2: rect.top - 5 },
-        { x1: 0, y1: rect.bottom + 5, x2: window.innerWidth + scrollX, y2: rect.bottom + 5 },
-      ]);
+      updateLines(rect);
     } else {
       setHighlightRect(null);
       setInfoText("");
       setLines([]);
     }
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      console.log(window.innerWidth - getScrollbarWidth(), window.innerHeight);
+      setViewBox(`0 0 ${window.innerWidth - getScrollbarWidth()} ${window.innerHeight}`);
+      updateHighlightAndLines(); // 手动调用更新逻辑
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    updateHighlightAndLines(); // 使用提取的函数
   }, [lastEvent, element?.className]);
 
   return (
@@ -55,8 +73,19 @@ export default () => {
       <svg
         className="absolute z-[9999]"
         style={{ width: "100%", height: "100%", top: `${scrollTop}px`, left: 0, pointerEvents: "none" }}
-        viewBox={`0 0 ${window.innerWidth} ${window.innerHeight}`}
+        viewBox={viewBox}
       >
+        {/* 覆盖背景 */}
+        {highlightRect && (
+          <rect
+            x={highlightRect.x}
+            y={highlightRect.y}
+            width={highlightRect.width}
+            height={highlightRect.height}
+            style={{ transition: "all 0.1s ease-in-out" }}
+            fill="rgb(97 113 254 / 0.4)" // 半透明淡黄色背景
+          />
+        )}
         {/* 信息文本 */}
         {infoText && (
           <text
@@ -70,7 +99,6 @@ export default () => {
             {infoText}
           </text>
         )}
-
         {/* 线条 */}
         {lines.map((line, index) => (
           <line

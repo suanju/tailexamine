@@ -55,3 +55,15 @@ export const getColorFromRule = (rule: string) => {
     }
     return { isColor: false, color: null };
 };
+
+/**
+ * 计算滚动条的宽度
+ * 
+ * 通过减去窗口的内宽度与文档元素的客户端宽度的差值来获取滚动条的宽度
+ * 这个函数假设滚动条在右侧，并且在垂直滚动条显示时其宽度是恒定的
+ * 
+ * @returns {number} 滚动条的宽度（以像素为单位）
+ */
+export const getScrollbarWidth = (): number => {
+    return window.innerWidth - document.documentElement.clientWidth;
+}

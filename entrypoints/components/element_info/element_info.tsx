@@ -4,12 +4,22 @@ import ElementInfoCard from "./element_card";
 import { useElementCardStore } from "@/entrypoints/store/element_card";
 
 export const ElementInfoId = "element-info";
+const cardWidth = 336;
 
 const useCardFollow = (setElementCardPosition: (top: number, left: number) => void) => {
     const { isListeningMouse } = useMouseStore();
+
     const handleMouseMove = useCallback((event: MouseEvent) => {
         requestAnimationFrame(() => {
-            setElementCardPosition(event.pageY + 40, event.pageX + 40);
+            const windowWidth = window.innerWidth;
+            const offset = 40;
+            // 判断左右半屏
+            const isLeftSide = event.pageX < windowWidth / 2;
+            // 根据鼠标位置决定卡片的 left 值
+            const left = isLeftSide
+                ? event.pageX + offset
+                : event.pageX - offset - cardWidth;
+            setElementCardPosition(event.pageY + offset, left);
         });
     }, [setElementCardPosition]);
 
@@ -24,7 +34,6 @@ const useCardFollow = (setElementCardPosition: (top: number, left: number) => vo
 };
 
 export default () => {
-    console.log("组件加载 element_info");
     const { elementCardPosition, setElementCardPosition } = useElementCardStore();
     useCardFollow(setElementCardPosition);
 

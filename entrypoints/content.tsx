@@ -61,7 +61,7 @@ const useMouseListener = () => {
 };
 
 const AppRender = () => {
-  console.log("加载 App");
+  // console.log("加载 App");
   const { element } = useMouseStore();
 
   useMouseListener();
