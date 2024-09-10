@@ -49,18 +49,18 @@ export default ({ delTag }: { delTag: (Tag: string) => void }) => {
         if (element) {
             //作用相同规则进行去除
             element.classList.forEach((className: string) => {
-                console.log("className", className, rules[className as keyof typeof rules]);
-                if (rules[className as keyof typeof rules]) {
+                console.log("className", className, rules[className]);
+                if (rules[className]) {
                     //删除规则
-                    console.log("删除规则", className, areCSSRulesSame(rules[className as keyof typeof rules], rules[value as keyof typeof rules]));
-                    if (areCSSRulesSame(rules[className as keyof typeof rules], rules[value as keyof typeof rules])) {
+                    console.log("删除规则", className, areCSSRulesSame(rules[className], rules[value]));
+                    if (areCSSRulesSame(rules[className], rules[value])) {
                         element.classList.remove(className);
                         delTag(className)
                     }
                 }
             });
             element.classList.add(value);
-            const styleRule = rules[value as keyof typeof rules];
+            const styleRule = rules[value];
             if (styleRule) addStyle(value, styleRule);
             setSelectedValue(null);
             setSearchValue("");

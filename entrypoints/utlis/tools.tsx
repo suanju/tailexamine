@@ -47,8 +47,8 @@ export const getElementStructure = (element: HTMLElement | null) => {
  *          如果未找到颜色值，则返回一个包含isColor为false和color为null的对象
  */
 export const getColorFromRule = (rule: string) => {
-    // 定义一个正则表达式，用于匹配rgb、rgba或rgb(a)格式的颜色字符串
-    const colorRegex = /(?:rgb|rgba|rgb[a]?)\(([^)]+)\)/i;
+    // 定义正则表达式，用于匹配rgb、rgba、rgb(a)格式的颜色字符串以及16进制颜色
+    const colorRegex = /(?:rgb|rgba|rgb[a]?)\(([^)]+)\)|#([0-9a-fA-F]{3}){1,2}\b/i;
     const match = rule.match(colorRegex);
     if (match) {
         return { isColor: true, color: match[0] };
