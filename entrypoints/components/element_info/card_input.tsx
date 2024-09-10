@@ -3,7 +3,7 @@ import { ElementInfoId } from "@/entrypoints/components/element_info/element_inf
 import { useMouseStore } from "@/entrypoints/store/mouse";
 import useDynamicStyles from '@/entrypoints/hooks/use_dynamic_styles';
 import { Select, Space } from "antd";
-import { getColorFromRule } from "@/entrypoints/utlis/tools";
+import { getColorFromRule, areCSSRulesSame } from "@/entrypoints/utlis/tools";
 import { options, rules } from "../../rule/rule";
 
 const optionRender = (option: any) => {
@@ -22,7 +22,7 @@ const optionRender = (option: any) => {
     );
 };
 
-export default () => {
+export default ({ delTag }: { delTag: (Tag: string) => void }) => {
     const { element, setElement } = useMouseStore();
     const { addStyle } = useDynamicStyles();
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
@@ -47,6 +47,18 @@ export default () => {
     // 选中事件
     const handleSelect = (value: string) => {
         if (element) {
+            //作用相同规则进行去除
+            element.classList.forEach((className: string) => {
+                console.log("className", className, rules[className as keyof typeof rules]);
+                if (rules[className as keyof typeof rules]) {
+                    //删除规则
+                    console.log("删除规则", className, areCSSRulesSame(rules[className as keyof typeof rules], rules[value as keyof typeof rules]));
+                    if (areCSSRulesSame(rules[className as keyof typeof rules], rules[value as keyof typeof rules])) {
+                        element.classList.remove(className);
+                        delTag(className)
+                    }
+                }
+            });
             element.classList.add(value);
             const styleRule = rules[value as keyof typeof rules];
             if (styleRule) addStyle(value, styleRule);

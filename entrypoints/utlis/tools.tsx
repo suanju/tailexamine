@@ -67,3 +67,25 @@ export const getColorFromRule = (rule: string) => {
 export const getScrollbarWidth = (): number => {
     return window.innerWidth - document.documentElement.clientWidth;
 }
+
+/**
+ * 检查两个 CSS 规则是否相同
+ * @param rule1 第一个 CSS 规则字符串
+ * @param rule2 第二个 CSS 规则字符串
+ * @returns 如果两个规则相同返回 true，否则返回 false
+ */
+export const areCSSRulesSame = (rule1: string, rule2: string): boolean => {
+    console.log(rule1, rule2)
+    // 解析 CSS 规则，提取属性名
+    const parseCSSRule = (rule: string): Set<string> =>
+        new Set(
+            rule.split(';')
+                .map(line => line.split(':')[0]?.trim())
+                .filter(Boolean) // 过滤掉空行和无效值
+        );
+    const properties1 = parseCSSRule(rule1);
+    const properties2 = parseCSSRule(rule2);
+    if (properties1.size !== properties2.size) return false;
+    // 使用 every 检查所有属性名是否都在 properties2 中
+    return [...properties1].every(property => properties2.has(property));
+};

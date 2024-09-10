@@ -8,7 +8,7 @@ export default () => {
   const [infoText, setInfoText] = useState<string>("");
   const [infoTextPosition, setInfoTextPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [lines, setLines] = useState<{ x1: number; y1: number; x2: number; y2: number }[]>([]);
-  const { element, lastEvent } = useMouseStore();
+  const { element, lastEvent, isListeningMouse } = useMouseStore();
   const [viewBox, setViewBox] = useState(`0 0 ${window.innerWidth} ${window.innerHeight}`);
 
   const updateLines = (rect: DOMRect) => {
@@ -78,12 +78,13 @@ export default () => {
         {/* 覆盖背景 */}
         {highlightRect && (
           <rect
+            display={isListeningMouse ? "block" : "none"}
             x={highlightRect.x}
             y={highlightRect.y}
             width={highlightRect.width}
             height={highlightRect.height}
             style={{ transition: "all 0.1s ease-in-out" }}
-            fill="rgb(97 113 254 / 0.4)" // 半透明淡黄色背景
+            fill="rgb(97 113 254 / 0.4)"
           />
         )}
         {/* 信息文本 */}

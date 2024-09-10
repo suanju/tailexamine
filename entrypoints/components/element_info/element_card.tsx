@@ -163,7 +163,7 @@ export default () => {
                     ) : 'No element selected'}
                 </div>
             </div>
-            <CardInput />
+            <CardInput delTag={handleTagClose} />
         </Card>
     );
 };
