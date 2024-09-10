@@ -5,7 +5,7 @@ import { useElementCardStore } from "@/entrypoints/store/element_card";
 
 export const ElementInfoId = "element-info";
 const cardWidth = 336;
-const cardHeight = 200; // 假设卡片的高度为 200px
+const cardHeight = 368; // 假设卡片的高度为 200px
 
 const useCardFollow = (setElementCardPosition: (top: number, left: number) => void) => {
     const { isListeningMouse } = useMouseStore();

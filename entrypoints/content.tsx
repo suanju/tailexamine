@@ -11,13 +11,35 @@ export default defineContentScript({
   matches: ['*://*/*'],
   main(ctx) {
     console.log('init content', ctx);
-    const root = document.createElement("div");
-    document.body.appendChild(root);
-    createRoot(root).render(
-      <AppRender />
-    );
+    chrome.runtime.onMessage.addListener((request) => {
+      if (request.toggle) {
+        toggleTailexamine();
+      }
+    });
+
+    // 创建与卸载
+    const toggleTailexamine = () => {
+      const root = document.getElementById("tailexamine");
+      if (root) {
+        removeTailexamine(root);
+      } else {
+        createTailexamine();
+      }
+    }
+    const createTailexamine = () => {
+      const root = document.createElement("div");
+      root.id = "tailexamine";
+      document.body.appendChild(root);
+      createRoot(root).render(<AppRender />);
+      console.log('tailexamine created');
+    }
+    const removeTailexamine = (root: HTMLElement) => {
+      root.remove();
+      console.log('tailexamine removed');
+    }
   },
 });
+
 
 // 监听鼠标的自定义 Hook
 const useMouseListener = () => {
