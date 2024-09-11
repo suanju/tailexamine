@@ -71,8 +71,10 @@ export default () => {
 
     // 关闭窗口
     const close = () => {
-        setElement(null);
-        setIsListeningMouse(true);
+        // setElement(null);
+        // setIsListeningMouse(true);
+        // @ts-ignore
+        window.removeTailexamine()
     };
 
     // 复制类名，使用节流

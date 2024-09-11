@@ -38,6 +38,7 @@ const useCardFollow = (setElementCardPosition: (top: number, left: number) => vo
         if (isListeningMouse) {
             window.addEventListener('mousemove', handleMouseMove);
             return () => {
+                console.log('卸载监听 remove mousemove')
                 window.removeEventListener('mousemove', handleMouseMove);
             };
         }

@@ -11,34 +11,54 @@ export default defineContentScript({
   matches: ['*://*/*'],
   main(ctx) {
     console.log('init content', ctx);
+    let root: HTMLElement | null = null;
+    let tailexamineRoot: any = null;
+
+    //点击插件事件
     chrome.runtime.onMessage.addListener((request) => {
       if (request.toggle) {
         toggleTailexamine();
       }
     });
 
-    // 创建与卸载
     const toggleTailexamine = () => {
-      const root = document.getElementById("tailexamine");
       if (root) {
-        removeTailexamine(root);
+        removeTailexamine();
       } else {
         createTailexamine();
       }
-    }
+    };
+
     const createTailexamine = () => {
-      const root = document.createElement("div");
-      root.id = "tailexamine";
-      document.body.appendChild(root);
-      createRoot(root).render(<AppRender />);
+      if (!root) {
+        root = document.createElement("div");
+        root.id = "tailexamine";
+        document.body.appendChild(root);
+      }
+      //避免重复创建
+      if (!tailexamineRoot) {
+        tailexamineRoot = createRoot(root);
+      }
+      tailexamineRoot.render(<AppRender />);
       console.log('tailexamine created');
-    }
-    const removeTailexamine = (root: HTMLElement) => {
-      root.remove();
-      console.log('tailexamine removed');
-    }
+    };
+
+    const removeTailexamine = () => {
+      if (root && tailexamineRoot) {
+        tailexamineRoot.unmount();
+        root.remove();
+        root = null;
+        tailexamineRoot = null;
+        console.log('tailexamine removed');
+      }
+    };
+
+    // 挂载到 window
+    (window as any).removeTailexamine = removeTailexamine;
+    console.log((window as any).removeTailexamine);
   },
 });
+
 
 
 // 监听鼠标的自定义 Hook
