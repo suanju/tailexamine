@@ -3,9 +3,8 @@
 ###### 启动命令
 
 ```
+pnpm install
 pnpm run dev 
-pnpm run build 
-pnpm run zip
 ```
 
 ###### 已完成功能
