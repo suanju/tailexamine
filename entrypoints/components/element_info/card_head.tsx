@@ -6,7 +6,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { throttle } from 'radash';
 
 export default () => {
-    const { element, setElement, setIsListeningMouse } = useMouseStore();
+    const { element } = useMouseStore();
     const { elementCardPosition, setElementCardPosition, isMove, setIsMove } = useElementCardStore();
     const dragStartRef = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);

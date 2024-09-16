@@ -6,6 +6,7 @@ import ElementInfo, { ElementInfoId } from "./components/element_info/element_in
 import { useMouseStore } from '@/entrypoints/store/mouse';
 import { ConfigProvider, App } from 'antd';
 import { useEffect, useCallback } from 'react';
+import { throttle } from 'radash';
 
 export default defineContentScript({
   matches: ['*://*/*'],
@@ -65,14 +66,20 @@ export default defineContentScript({
 const useMouseListener = () => {
   const { element, setElement, setLastEvent, setPosition, isListeningMouse, setIsListeningMouse } = useMouseStore();
 
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    // 更新鼠标信息
-    if (element !== event.target) {
-      setElement(event.target as HTMLElement);
-      setPosition(event.clientX, event.clientY);
-      setLastEvent(event);
-    }
-  }, [element, setElement, setLastEvent, setPosition]);
+  const handleMouseMove = useCallback(
+    throttle({
+      interval: 100, // 设置节流间隔时间为 100ms，视实际需要调整
+    }, (event: MouseEvent) => {
+      // 更新鼠标信息
+      console.log(element !== event.target);
+      if (element !== event.target) {
+        setElement(event.target as HTMLElement);
+        setPosition(event.clientX, event.clientY);
+        setLastEvent(event);
+      }
+    }), 
+    [element, setElement, setLastEvent, setPosition]
+  );
 
   const handleClick = useCallback((e: MouseEvent) => {
     if (!document.getElementById(ElementInfoId)?.contains(e.target as Node)) {
